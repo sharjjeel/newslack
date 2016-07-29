@@ -1,4 +1,4 @@
-package com.chat.model;
+package com.chat.DAO;
 
 /**
  * Created by sharjjeel on 7/11/16.

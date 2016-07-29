@@ -1,6 +1,8 @@
 package com.chat.resource;
 
+import com.chat.DAO.ThreadDAO;
 import com.chat.model.Message;
+import com.chat.model.Thread;
 
 import javax.persistence.EntityManager;
 import javax.ws.rs.*;
@@ -33,9 +35,10 @@ public class ChatResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getThreads(@DefaultValue("20") @QueryParam("count") int count) {
-        List<String> threads = new ArrayList<String>();
+        List<Thread> threads = new ArrayList<Thread>();
         // TODO: get last {count} updated threads
-        return Response.ok(threads.toArray(new String[threads.size()])).build();
+        ThreadDAO threadDAO = new ThreadDAO();
+        return Response.ok(threadDAO.getLastUpdated(count)).build();
     }
 
     @GET
