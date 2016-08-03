@@ -4,8 +4,8 @@ create table threads (
 );
 
 create table messages (
-    messageId varchar(100) PRIMARY KEY,
-    user varchar(100) not null,
+    message_id varchar(100) PRIMARY KEY,
+    user_name varchar(100) not null,
     text text not null,
     ts varchar(100) not null,
     thread_name varchar(100) REFERENCES threads(thread_name)

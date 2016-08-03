@@ -6,7 +6,9 @@ import org.codehaus.jackson.map.annotate.JsonView;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Message {
     @JsonView
-    public String user;
+    public String message_id;
+    @JsonView
+    public String user_name;
     @JsonView
     public String text;
     @JsonView

@@ -1,8 +1,11 @@
 package com.chat.resource;
 
+import com.chat.DAO.MessageDAO;
 import com.chat.DAO.ThreadDAO;
 import com.chat.model.Message;
 import com.chat.model.Thread;
+import org.hibernate.annotations.common.util.impl.LoggerFactory;
+import org.jboss.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.ws.rs.*;
@@ -12,6 +15,7 @@ import javax.xml.ws.WebServiceException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Root resource (exposed at "myresource" path)
@@ -19,6 +23,7 @@ import java.util.List;
 @Path("threads")
 public class ChatResource {
 
+    Logger log = LoggerFactory.logger(ChatResource.class);
     /**
      * Method handling HTTP GET requests. The returned object will be sent
      * to the client as "text/plain" media type.
@@ -42,6 +47,16 @@ public class ChatResource {
     }
 
     @GET
+    @Path("messages")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getMessages() {
+        log.info("getting messages");
+        MessageDAO messageDAO = new MessageDAO();
+        log.info(messageDAO.getAllMessages());
+        return Response.ok(messageDAO.getAllMessages()).build();
+    }
+
+    @GET
     @Path("/{thread_name}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getMessages(@PathParam("thread_name") String thread_name,
@@ -62,10 +77,11 @@ public class ChatResource {
 
 
     @POST
-    @Path("/{thread_name}/messages")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Path("{thread_name}/messages")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addMessage(@PathParam("thread_name") String thread_name, Message m) {
+        log.info("inside post");
+        log.info(m);
         if (m.ts == null) {
             m.ts = Instant.now().toString();
         }
@@ -74,10 +90,16 @@ public class ChatResource {
             throw new WebServiceException("text must not be null");
         }
 
-        if (m.user == null) {
+        if (m.user_name == null) {
             throw new WebServiceException("user must not be null");
         }
+        String uniqueID = UUID.randomUUID().toString();
+        m.message_id = uniqueID;
+        m.thread_name = thread_name;
+        MessageDAO messageDAO = new MessageDAO();
+        messageDAO.addMessage(m);
+
         // TODO: Add userId and Message to postgres
-        return Response.status(Response.Status.CREATED).build();
+        return Response.ok(m).build();
     }
 }

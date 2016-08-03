@@ -15,12 +15,13 @@ public class MessageDAO {
 
     public List<MessageEntity> getAllMessages() {
         EntityManager em = PersistenceUtil.getEntityManager();
-        return em.createQuery("SELECT o FROM messages o", MessageEntity.class).getResultList();
+        List<MessageEntity> me = em.createQuery("SELECT o FROM messages o", MessageEntity.class).getResultList();
+        return me;
     }
 
     public List<MessageEntity> getAllMessagesForThread(String thread_name) {
         EntityManager em = PersistenceUtil.getEntityManager();
-        return em.createQuery("SELECT o FROM messages o where o.thread_name = :thread_name",
+        return em.createQuery("SELECT o FROM messages o where o.thread.thread_name = :thread_name",
                 MessageEntity.class)
                 .setParameter("thread_name", thread_name)
                 .getResultList();
@@ -28,6 +29,7 @@ public class MessageDAO {
 
     public ThreadEntity addMessage(Message message) {
         EntityManager em = PersistenceUtil.getEntityManager();
+        em.getTransaction().begin();
         TypedQuery<ThreadEntity> query = em.createQuery(
                 "SELECT e FROM threads e "
                         + "WHERE e.thread_name = :thread_name", ThreadEntity.class);
@@ -46,13 +48,15 @@ public class MessageDAO {
         em.persist(threadEntity);
         
         MessageEntity messageEntity = new MessageEntity();
+        messageEntity.message_id = message.message_id;
         messageEntity.text = message.text;
         messageEntity.thread = threadEntity;
         messageEntity.ts = message.ts;
-        messageEntity.user = message.user;
+        messageEntity.user_name = message.user_name;
 
         em.persist(messageEntity);
         em.flush();
+        em.getTransaction().commit();
 
         return threadEntity;
     }

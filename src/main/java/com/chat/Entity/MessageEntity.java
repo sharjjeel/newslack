@@ -9,8 +9,12 @@ import javax.persistence.*;
 
 @Entity(name = "messages")
 public class MessageEntity {
-    @Column(name = "user")
-    public String user;
+    @Id
+    @Column(name = "message_id")
+    public String message_id;
+
+    @Column(name = "user_name")
+    public String user_name;
 
     @Column(name = "text")
     public String text;
@@ -24,8 +28,9 @@ public class MessageEntity {
 
     public Message getObject() {
         Message m = new Message();
+        m.message_id = message_id;
         m.text = text;
-        m.user = user;
+        m.user_name = user_name;
         m.ts = ts;
         m.thread_name = thread.thread_name;
         return m;

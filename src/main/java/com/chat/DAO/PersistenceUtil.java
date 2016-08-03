@@ -15,7 +15,7 @@ public class PersistenceUtil {
         if (entityManagerFactory != null) {
             return;
         }
-        entityManagerFactory = Persistence.createEntityManagerFactory("sharjeel");
+        entityManagerFactory = Persistence.createEntityManagerFactory("manager1");
     }
 
     public static EntityManager getEntityManager() {
