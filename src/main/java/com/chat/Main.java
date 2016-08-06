@@ -1,6 +1,7 @@
 package com.chat;
 
 import com.chat.DAO.PersistenceUtil;
+import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -23,13 +24,14 @@ public class Main {
     public static HttpServer startServer() {
         // create a resource config that scans for JAX-RS resources and providers
         // in com.chat package
-        final ResourceConfig rc = new ResourceConfig().packages("com.chat");
+        final ResourceConfig rc = new ResourceConfig().packages("com.chat.resource");
 
         // uncomment the following line if you want to enable
         // support for JSON on the service (you also have to uncomment
         // dependency on jersey-media-json module in pom.xml)
         // --
-        // rc.addBinder(org.glassfish.jersey.media.json.JsonJaxbBinder);
+        rc.register(JacksonJaxbJsonProvider.class);
+//        rc.addBinder(org.glassfish.jersey.media.json.JsonJaxbBinder);
 
         // create and start a new instance of grizzly http server
         // exposing the Jersey application at BASE_URI
@@ -42,9 +44,10 @@ public class Main {
      * @throws IOException
      */
     public static void main(String[] args) throws IOException {
-        final HttpServer server = startServer();
         // create an entity manager factory
         PersistenceUtil.buildEntityManagerFactory();
+
+        final HttpServer server = startServer();
 
         System.out.println(String.format("Jersey app started with WADL available at "
                 + "%sapplication.wadl\nHit enter to stop it...", BASE_URI));

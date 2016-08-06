@@ -34,7 +34,7 @@ public class ChatResource {
     @Path("/healthcheck")
     @Produces(MediaType.TEXT_PLAIN)
     public String healthCheck() {
-        return "I'm alive";
+        return "I'm alive\n";
     }
 
     @GET
@@ -77,7 +77,7 @@ public class ChatResource {
 
 
     @POST
-    @Path("{thread_name}/messages")
+    @Path("/{thread_name}/messages")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addMessage(@PathParam("thread_name") String thread_name, Message m) {
         log.info("inside post");
