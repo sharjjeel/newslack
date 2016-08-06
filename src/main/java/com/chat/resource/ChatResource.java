@@ -70,9 +70,13 @@ public class ChatResource {
     @POST
     @Path("/{thread_name}/messages")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addMessage(@PathParam("thread_name") String thread_name, Message m) {
+    public Response addMessage(@PathParam("thread_name") String thread_name,
+                               @QueryParam("user_name") String user_name,
+                               @QueryParam("text") String text) {
         log.info("inside post");
-        log.info(m);
+        Message m = new Message();
+        m.text = text;
+        m.user_name = user_name;
         if (m.ts == null) {
             m.ts = Instant.now().toString();
         }

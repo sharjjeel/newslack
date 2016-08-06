@@ -2,7 +2,11 @@ package com.chat;
 
 import com.chat.DAO.PersistenceUtil;
 import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
+import org.glassfish.grizzly.http.server.HttpHandler;
 import org.glassfish.grizzly.http.server.HttpServer;
+import org.glassfish.grizzly.http.server.Request;
+import org.glassfish.grizzly.http.server.Response;
+import org.glassfish.grizzly.http.server.accesslog.AccessLogBuilder;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 
@@ -35,7 +39,19 @@ public class Main {
 
         // create and start a new instance of grizzly http server
         // exposing the Jersey application at BASE_URI
-        return GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);
+        HttpServer server = GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);
+        server.getServerConfiguration().addHttpHandler(new HttpHandler() {
+            @Override
+            public void service(Request request, Response response) throws Exception {
+                System.out.println(request);
+                System.out.println(response);
+            }
+        });
+        final AccessLogBuilder builder = new AccessLogBuilder("src/main/resources/log.conf");
+        builder.instrument(server.getServerConfiguration());
+
+        return server;
+
     }
 
     /**
@@ -52,7 +68,7 @@ public class Main {
         System.out.println(String.format("Jersey app started with WADL available at "
                 + "%sapplication.wadl\nHit enter to stop it...", BASE_URI));
         System.in.read();
-        server.stop();
+        server.shutdown();
     }
 }
 

@@ -57,7 +57,7 @@ public class MessageDAO {
         em.persist(messageEntity);
         em.flush();
         em.getTransaction().commit();
-
+        System.out.println("completed database");
         return threadEntity;
     }
 
