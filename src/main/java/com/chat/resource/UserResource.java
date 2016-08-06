@@ -26,13 +26,4 @@ public class UserResource {
     public String healthCheck() {
         return "I'm alive";
     }
-
-    @GET
-    @Path("/{user_name}/callouts/unanswered")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getCallouts(@PathParam("user_name") String user_name) {
-        List<Message> messages = new ArrayList<Message>();
-        // TODO: get callouts for a specific user
-        return Response.ok(messages.toArray(new Message[messages.size()])).build();
-    }
 }

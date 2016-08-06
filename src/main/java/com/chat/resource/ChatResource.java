@@ -66,15 +66,6 @@ public class ChatResource {
         return Response.ok(messages.toArray(new Message[messages.size()])).build();
     }
 
-    @GET
-    @Path("/{thread_name}/callouts/unanswered")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getCallouts(@PathParam("thread_name") String thread_name) {
-        List<Message> messages = new ArrayList<Message>();
-        // TODO: get the callouts in a specific thread
-        return Response.ok(messages.toArray(new Message[messages.size()])).build();
-    }
-
 
     @POST
     @Path("/{thread_name}/messages")
