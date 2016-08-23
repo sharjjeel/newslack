@@ -41,6 +41,7 @@ public class ChatResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getThreads(@DefaultValue("20") @QueryParam("count") int count) {
         List<Thread> threads = new ArrayList<Thread>();
+        log.info("Getting last "+ count + " messages");
         // TODO: get last {count} updated threads
         ThreadDAO threadDAO = new ThreadDAO();
         return Response.ok(threadDAO.getLastUpdated(count)).build();
@@ -73,7 +74,8 @@ public class ChatResource {
     public Response addMessage(@PathParam("thread_name") String thread_name,
                                @QueryParam("user_name") String user_name,
                                @QueryParam("text") String text) {
-        log.info("inside post");
+        log.info(text);
+        log.info(user_name);
         Message m = new Message();
         m.text = text;
         m.user_name = user_name;
