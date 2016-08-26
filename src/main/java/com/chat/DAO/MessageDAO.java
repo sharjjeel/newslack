@@ -15,8 +15,7 @@ public class MessageDAO {
 
     public List<MessageEntity> getAllMessages() {
         EntityManager em = PersistenceUtil.getEntityManager();
-        List<MessageEntity> me = em.createQuery("SELECT o FROM messages o", MessageEntity.class).getResultList();
-        return me;
+        return em.createQuery("SELECT o FROM messages o", MessageEntity.class).getResultList();
     }
 
     public List<MessageEntity> getAllMessagesForThread(String thread_name) {
@@ -57,7 +56,6 @@ public class MessageDAO {
         em.persist(messageEntity);
         em.flush();
         em.getTransaction().commit();
-        System.out.println("completed database");
         return threadEntity;
     }
 

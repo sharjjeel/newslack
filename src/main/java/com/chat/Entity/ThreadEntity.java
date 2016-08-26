@@ -1,10 +1,10 @@
 package com.chat.Entity;
 
+import com.chat.model.Message;
 import com.chat.model.Thread;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created by saziz on 7/28/16.
@@ -17,6 +17,13 @@ public class ThreadEntity {
 
     @Column(name = "ts")
     public String ts;
+
+//    @OneToMany(fetch = FetchType.EAGER)
+//    private List<MessageEntity> messages;
+//
+//    public List<MessageEntity> getMessages() {
+//        return messages;
+//    }
 
     public Thread getObject() {
         Thread t = new Thread();

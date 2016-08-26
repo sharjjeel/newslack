@@ -17,9 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-/**
- * Root resource (exposed at "myresource" path)
- */
 @Path("threads")
 public class ChatResource {
 
@@ -37,18 +34,17 @@ public class ChatResource {
         return "I'm alive\n";
     }
 
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getThreads(@DefaultValue("20") @QueryParam("count") int count) {
-        List<Thread> threads = new ArrayList<Thread>();
-        log.info("Getting last "+ count + " messages");
-        // TODO: get last {count} updated threads
-        ThreadDAO threadDAO = new ThreadDAO();
-        return Response.ok(threadDAO.getLastUpdated(count)).build();
-    }
+//    @GET
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public Response getThreads(@DefaultValue("20") @QueryParam("count") int count) {
+//        log.info("Getting last "+ count + " messages");
+//        // TODO: get last {count} updated threads
+//        ThreadDAO threadDAO = new ThreadDAO();
+//        return Response.ok(threadDAO.getLastUpdated(count)).build();
+//    }
 
     @GET
-    @Path("messages")
+    @Path("/messages")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getMessages() {
         log.info("getting messages");
@@ -58,13 +54,20 @@ public class ChatResource {
     }
 
     @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getThreads() {
+        log.info("getting threads");
+        ThreadDAO threadDAO = new ThreadDAO();
+        return Response.ok(threadDAO.getAll()).build();
+    }
+
+    @GET
     @Path("/{thread_name}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getMessages(@PathParam("thread_name") String thread_name,
                                 @DefaultValue("20") @QueryParam("count") int count) {
-        List<Message> messages = new ArrayList<Message>();
-        // TODO: get last {count} messages
-        return Response.ok(messages.toArray(new Message[messages.size()])).build();
+        MessageDAO messageDAO = new MessageDAO();
+        return Response.ok(messageDAO.getAllMessagesForThread(thread_name)).build();
     }
 
 
@@ -90,8 +93,7 @@ public class ChatResource {
         if (m.user_name == null) {
             throw new WebServiceException("user must not be null");
         }
-        String uniqueID = UUID.randomUUID().toString();
-        m.message_id = uniqueID;
+        m.message_id = UUID.randomUUID().toString();
         m.thread_name = thread_name;
         MessageDAO messageDAO = new MessageDAO();
         messageDAO.addMessage(m);
